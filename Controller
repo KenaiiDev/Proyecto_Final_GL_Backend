@@ -1,0 +1,5 @@
+ cons controller ={}
+
+     controller.index =(req,res)=>{ 
+     res.send('La conexión ha sido correcta desde índex.routes')
+     )}
