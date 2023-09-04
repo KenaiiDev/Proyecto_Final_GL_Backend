@@ -1,4 +1,13 @@
- cons controller ={}
+conts express = require('express')
+conts router = express.Router()
+conts controller = require('../controllers/ìndex.controllers')
+
+router.get('/', controller.index)
+
+module.express =router
+
+
+conts controller ={}
 
      controller.index =(req,res)=>{ 
      res.send('La conexión ha sido correcta desde índex.routes')
