@@ -6,20 +6,32 @@ const prisma = prismaClient.$extends({
   name: "prisma",
   query: {
     $allModels: {
+      async create({ args, model }) {
+        const data = {
+          ...args.data,
+          deletedAt: null,
+        };
+
+        return prismaClient[model].create({
+          ...args,
+          data,
+        });
+      },
+
       async findMany({ args, model }) {
         args.where = {
           ...args.where,
           deletedAt: null,
         };
-        return prisma[model].findMany(args);
+        return prismaClient[model].findMany(args);
       },
 
-      async findOne({ args, query, model }) {
+      async findOne({ args, model }) {
         args.where = {
           ...args.where,
           deletedAt: null,
         };
-        return prisma[model].findOne(args);
+        return prismaClient[model].findOne(args);
       },
 
       async findUnique({ args, model }) {
@@ -27,7 +39,7 @@ const prisma = prismaClient.$extends({
           ...args.where,
           deletedAt: null,
         };
-        return prisma[model].findUnique(args);
+        return prismaClient[model].findUnique(args);
       },
 
       async findFirst({ args, model }) {
@@ -35,22 +47,14 @@ const prisma = prismaClient.$extends({
           ...args.where,
           deletedAt: null,
         };
-        return prisma[model].findFirst(args);
-      },
-
-      async findUnique({ args, model }) {
-        args.where = {
-          ...args.where,
-          deletedAt: null,
-        };
-        return prisma[model].findUnique(args);
+        return prismaClient[model].findFirst(args);
       },
 
       async delete({ model, args }) {
         const data = {
           deletedAt: new Date(),
         };
-        return prisma[model].update({
+        return prismaClient[model].update({
           ...args,
           data,
         });
