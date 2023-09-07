@@ -11,33 +11,33 @@ const ERROR_HANDLERS = {
   },
   ValidationError: ({ error, response }) => {
     response.status(httpStatus.UNPROCESSABLE_ENTITY).json({
-        success: false,
-        message: "Error on request data",
-        error: error.message
-    }),
+      success: false,
+      message: "Error on request data",
+      error: error.message,
+    });
   },
   defaultError: ({ error, response }) => {
     response.status(httpStatus.INTERNAL_SERVER_ERROR).json({
-        success: false,
-        message: "An error has occurred",
-        error: error.message,
+      success: false,
+      message: "An error has occurred",
+      error: error.message,
     });
   },
 };
 
-const errorHandler= (error, _request, response, _next) => {
-    let option = error.name;
+const errorHandler = (error, _request, response, _next) => {
+  let option = error.name;
 
-    if(error.isJoi) {
-        option = "ValidationError";
-    }
+  if (error.isJoi) {
+    option = "ValidationError";
+  }
 
-    if(error instanceof prisma.PrismaClientKnownRequestError) {
-        option = error.code;
-    }
+  if (error instanceof prisma.PrismaClientKnownRequestError) {
+    option = error.code;
+  }
 
-    const handler = ERROR_HANDLERS[option] ?? ERROR_HANDLERS.defaultError;
-    handler({ response, error });
-}
+  const handler = ERROR_HANDLERS[option] ?? ERROR_HANDLERS.defaultError;
+  handler({ response, error });
+};
 
 export default errorHandler;
