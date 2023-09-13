@@ -79,8 +79,30 @@ export const reviewController = () => {
 
       res.status(httpStatus.OK).json({
         success: true,
-        message: 'Get user by id',
+        message: 'Get review by id',
         data: review
+      })
+    } catch (error) {
+      next()
+    } finally {
+      await prisma.$disconnect()
+    }
+  }
+
+  // Get Review by Movie ID
+  const getReviewsByMovieId = async (req, res, next) => {
+    const { id } = req.params
+    try {
+      const movieReviews = await prisma.Reviews.findMany({
+        where: {
+          movieId: id
+        }
+      })
+
+      res.status(httpStatus.OK).json({
+        success: true,
+        message: 'Get reviews by movie ID',
+        data: movieReviews
       })
     } catch (error) {
       next()
@@ -123,6 +145,7 @@ export const reviewController = () => {
     deleteReview,
     getReviews,
     getReviewById,
-    updateReview
+    updateReview,
+    getReviewsByMovieId
   }
 }
