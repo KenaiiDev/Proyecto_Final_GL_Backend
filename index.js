@@ -4,6 +4,7 @@ import cors from "cors";
 import { expressjwt as jwt } from "express-jwt";
 
 import { usersRoutes } from "./routes/users.routes.js";
+import { moviesRoutes } from "./routes/movies.routes.js";
 
 dotenv.config();
 
@@ -30,7 +31,7 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use("/api", usersRoutes());
+app.use("/api", usersRoutes(), moviesRoutes());
 
 app.use((req, res) => {
   console.log(`404: ${req.method} ${req.url}`);
