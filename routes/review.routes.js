@@ -10,4 +10,6 @@ export const reviewRoutes = () => {
     reviewRouter.route('/reviews/:id').get(getReviewById).put(updateReview).delete(deleteReview)
 
     reviewRouter.route('/reviews/movie/:id').get(getReviewsByMovieId)
+
+    return reviewRouter;
 }

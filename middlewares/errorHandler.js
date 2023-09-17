@@ -1,5 +1,5 @@
-import httpStatus from "../helpers/httpStatus";
-import prisma from "../database/prisma";
+import httpStatus from "../helpers/httpStatus.js";
+import { Prisma } from "@prisma/client";
 
 const ERROR_HANDLERS = {
   P2002: ({ error, response }) => {
@@ -13,6 +13,13 @@ const ERROR_HANDLERS = {
     response.status(httpStatus.UNPROCESSABLE_ENTITY).json({
       success: false,
       message: "Error on request data",
+      error: error.message,
+    });
+  },
+  TokenExpiredError: ({ error, response }) => {
+    response.status(httpStatus.UNAUTHORIZED).json({
+      success: false,
+      message: "Token expired",
       error: error.message,
     });
   },
@@ -32,7 +39,7 @@ const errorHandler = (error, _request, response, _next) => {
     option = "ValidationError";
   }
 
-  if (error instanceof prisma.PrismaClientKnownRequestError) {
+  if (error instanceof Prisma.PrismaClientKnownRequestError) {
     option = error.code;
   }
 
