@@ -2,9 +2,12 @@ import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import { expressjwt as jwt } from "express-jwt";
+import errorHandler from "./middlewares/errorHandler.js";
 
 import { usersRoutes } from "./routes/users.routes.js";
 import { moviesRoutes } from "./routes/movies.routes.js";
+import { authRoutes } from "./routes/auth.routes.js";
+import { reviewRoutes } from "./routes/review.routes.js";
 
 dotenv.config();
 
@@ -31,7 +34,9 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use("/api", usersRoutes(), moviesRoutes());
+app.use("/api", usersRoutes(), moviesRoutes(), authRoutes(), reviewRoutes());
+
+app.use(errorHandler);
 
 app.use((req, res) => {
   console.log(`404: ${req.method} ${req.url}`);
