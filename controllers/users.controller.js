@@ -53,11 +53,8 @@ export const usersController = () => {
   };
 
   const getUsers = async (req, res, next) => {
-    console.log("get users");
     try {
-      console.log("Before findMany");
       const users = await prisma.Users.findMany();
-      console.log("After findMany");
 
       res.status(httpStatus.OK).json({
         success: true,
@@ -65,7 +62,6 @@ export const usersController = () => {
         data: users,
       });
     } catch (error) {
-      console.log("error", error);
       next(error);
     } finally {
       await prisma.$disconnect();

@@ -37,8 +37,6 @@ export const authController = () => {
         },
       });
 
-      console.log(userRole);
-
       const user = await prisma.Users.create({
         data: {
           username,
@@ -92,8 +90,6 @@ export const authController = () => {
           .status(httpStatus.NOT_FOUND)
           .json({ success: false, message: "Invalid Credentials" });
 
-      console.log(user);
-
       const payload = {
         user: {
           id: user.id,
@@ -101,8 +97,6 @@ export const authController = () => {
           role: user.role.name,
         },
       };
-
-      console.log({ payload });
 
       const token = jwt.sign(payload, process.env.JWT_SECRET, {
         expiresIn: process.env.JWT_EXPIRES_IN,

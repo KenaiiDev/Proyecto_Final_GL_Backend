@@ -8,7 +8,6 @@ export const moviesController = () => {
 
     //get the Today's date in the format YYYY-MM-DD
     const todayDate = new Date().toISOString().slice(0, 10);
-    console.log(todayDate);
 
     const url = `${process.env.TMDB_API_URL}/discover/movie/?api_key=${process.env.TMDB_API_KEY}&page=${page}`;
 
@@ -44,8 +43,6 @@ export const moviesController = () => {
   const getMoviesByGenres = async (req, res, next) => {
     const { genres } = req.query;
     const page = req.query.page || 1;
-
-    console.log(`getMoviesByGenres Page: ${page}, genres:${genres}`);
 
     const url = `${process.env.TMDB_API_URL}/discover/movie/?api_key=${process.env.TMDB_API_KEY}&with_genres=${genres}&page=${page}`;
 
@@ -85,8 +82,6 @@ export const moviesController = () => {
     const page = req.query.page || 1;
 
     const url = `${process.env.TMDB_API_URL}/search/movie?api_key=${process.env.TMDB_API_KEY}&query=${title}&page=${page}`;
-
-    console.log(url);
 
     try {
       const response = await fetch(url);
@@ -129,8 +124,6 @@ export const moviesController = () => {
           idWatchedMedia: true,
         },
       });
-
-      console.log(isMovieInWatchList);
 
       if (isMovieInWatchList) {
         const filteredWatchList = isMovieInWatchList.idWatchedMedia.filter(
