@@ -35,6 +35,8 @@ const ERROR_HANDLERS = {
 const errorHandler = (error, _request, response, _next) => {
   let option = error.name;
 
+  console.error(error);
+
   if (error.isJoi) {
     option = "ValidationError";
   }

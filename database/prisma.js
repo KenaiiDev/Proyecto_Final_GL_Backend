@@ -23,6 +23,7 @@ const prisma = prismaClient.$extends({
           ...args.where,
           deletedAt: null,
         };
+        console.log(args.where);
         return prismaClient[model].findMany(args);
       },
 

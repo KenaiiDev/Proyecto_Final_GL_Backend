@@ -17,11 +17,12 @@ model Users {
   name           String
   password       String
   birthdate      DateTime
-  idWatchedMedia String[]
-  watchLater     String[]
+  idWatchedMedia String[] @default([])
+  watchLater     String[] @default([])
 
   Reviews Reviews[]
-  role    Roles[]
+  role    Roles     @relation(fields: [roleId], references: [id])
+  roleId  String    @db.ObjectId
 
   createdAt DateTime  @default(now())
   updatedAt DateTime  @default(now())
@@ -32,7 +33,7 @@ model Roles {
   id   String @id @default(auto()) @map("_id") @db.ObjectId
   name String @unique
 
-  Users   Users?  @relation(fields: [usersId], references: [id])
+  Users   Users[]
   usersId String? @db.ObjectId
 
   createdAt DateTime  @default(now())

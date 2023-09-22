@@ -18,16 +18,29 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-/*
 app.use(
   jwt({
     secret: process.env.JWT_SECRET,
     algorithms: ["HS256"],
   }).unless({
-    path: ["/api/auth/login", "/api/auth/register", "/api/auth/refresh"],
+    path: [
+      "/api/auth/login",
+      "/api/auth/register",
+      "/api/auth/refresh",
+      "/api/movies",
+      "/api/genres",
+      "/api/movies/genres",
+      "/api/movies/search",
+      "/api/movie/:id",
+      "/api/image/:id",
+      "/api/movies/:page",
+      "/api/reviews",
+      "/api/reviews/:id",
+      "/api/reviews/movie/:id",
+      "/api/reviews/user/:id",
+    ],
   })
 );
-*/
 
 app.use((req, res, next) => {
   console.log(`Incoming request: ${req.method} ${req.url}`);
@@ -40,6 +53,8 @@ app.use(errorHandler);
 
 app.use((req, res) => {
   console.log(`404: ${req.method} ${req.url}`);
+  console.log({ reqParams: req.params });
+  console.log({ reqQuery: req.query });
   res.status(404).send("404: Page not found");
 });
 

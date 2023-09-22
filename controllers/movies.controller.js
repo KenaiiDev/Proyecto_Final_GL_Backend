@@ -1,5 +1,6 @@
 import fetch from "node-fetch";
 import httpStatus from "../helpers/httpStatus.js";
+import prisma from "../database/prisma.js";
 
 export const moviesController = () => {
   const getMovies = async (req, res, next) => {
@@ -41,9 +42,10 @@ export const moviesController = () => {
   };
 
   const getMoviesByGenres = async (req, res, next) => {
-    console.log("getMoviesByGenres");
     const { genres } = req.query;
-    const page = req.params.page || 1;
+    const page = req.query.page || 1;
+
+    console.log(`getMoviesByGenres Page: ${page}, genres:${genres}`);
 
     const url = `${process.env.TMDB_API_URL}/discover/movie/?api_key=${process.env.TMDB_API_KEY}&with_genres=${genres}&page=${page}`;
 
@@ -80,7 +82,7 @@ export const moviesController = () => {
 
   const getMoviesByTitle = async (req, res, next) => {
     const { title } = req.query;
-    const page = req.params.page || 1;
+    const page = req.query.page || 1;
 
     const url = `${process.env.TMDB_API_URL}/search/movie?api_key=${process.env.TMDB_API_KEY}&query=${title}&page=${page}`;
 
@@ -99,7 +101,7 @@ export const moviesController = () => {
     }
   };
 
-  const getImageUrl = async (req, res, next) => {
+  const getImageUrl = async (req, res) => {
     const { id } = req.params;
 
     const url = `${process.env.TMDB_IMAGE_URL}/w500/${id}`;
@@ -111,6 +113,122 @@ export const moviesController = () => {
     });
   };
 
+  const toggleMovieWatchList = async (req, res, next) => {
+    try {
+      const { id } = req.params;
+      const { movieId } = req.body;
+
+      const isMovieInWatchList = await prisma.Users.findUnique({
+        where: {
+          id: id,
+          idWatchedMedia: {
+            has: movieId,
+          },
+        },
+        select: {
+          idWatchedMedia: true,
+        },
+      });
+
+      console.log(isMovieInWatchList);
+
+      if (isMovieInWatchList) {
+        const filteredWatchList = isMovieInWatchList.idWatchedMedia.filter(
+          (movie) => movie !== movieId
+        );
+
+        const user = await prisma.Users.update({
+          where: { id: id },
+          data: {
+            idWatchedMedia: filteredWatchList,
+          },
+        });
+
+        return res.status(httpStatus.OK).json({
+          success: true,
+          mensaje: "Movie removed from watch later",
+          data: user,
+        });
+      } else {
+        const user = await prisma.Users.update({
+          where: { id: id },
+          data: {
+            idWatchedMedia: {
+              push: movieId,
+            },
+          },
+        });
+
+        res.status(httpStatus.OK).json({
+          success: true,
+          mensaje: "Movie added to watch list",
+          data: user,
+        });
+      }
+    } catch (error) {
+      next(error);
+    } finally {
+      await prisma.$disconnect();
+    }
+  };
+
+  const toggleMovieWatchLater = async (req, res, next) => {
+    try {
+      const { id } = req.params;
+      const { movieId } = req.body;
+
+      const isMovieInWatchLater = await prisma.Users.findUnique({
+        where: {
+          id: id,
+          watchLater: {
+            has: movieId,
+          },
+        },
+        select: {
+          watchLater: true,
+        },
+      });
+
+      if (isMovieInWatchLater) {
+        const filteredWatchLater = isMovieInWatchLater.watchLater.filter(
+          (movie) => movie !== movieId
+        );
+
+        const user = await prisma.Users.update({
+          where: { id: id },
+          data: {
+            watchLater: filteredWatchLater,
+          },
+        });
+
+        return res.status(httpStatus.OK).json({
+          success: true,
+          mensaje: "Movie removed from watch later",
+          data: user,
+        });
+      } else {
+        const user = await prisma.Users.update({
+          where: { id: id },
+          data: {
+            watchLater: {
+              push: movieId,
+            },
+          },
+        });
+
+        res.status(httpStatus.OK).json({
+          success: true,
+          mensaje: "Movie added to watch list",
+          data: user,
+        });
+      }
+    } catch (error) {
+      next(error);
+    } finally {
+      await prisma.$disconnect();
+    }
+  };
+
   return {
     getMovies,
     getGenres,
@@ -118,5 +236,7 @@ export const moviesController = () => {
     getMovieById,
     getMoviesByTitle,
     getImageUrl,
+    toggleMovieWatchList,
+    toggleMovieWatchLater,
   };
 };
