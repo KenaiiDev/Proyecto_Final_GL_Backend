@@ -99,11 +99,11 @@ export const authController = () => {
       };
 
       const token = jwt.sign(payload, process.env.JWT_SECRET, {
-        expiresIn: process.env.JWT_EXPIRES_IN,
+        expiresIn: "1h",
       });
 
       const refreshToken = jwt.sign(payload, process.env.JWT_SECRET, {
-        expiresIn: process.env.JWT_REFRESH_EXPIRES_IN,
+        expiresIn: "1d",
       });
 
       res.status(httpStatus.OK).json({
@@ -244,11 +244,11 @@ export const authController = () => {
       };
 
       const token = jwt.sign(payload, process.env.JWT_SECRET, {
-        expiresIn: process.env.JWT_EXPIRES_IN,
+        expiresIn: "1h",
       });
 
       const newRefreshToken = jwt.sign(payload, process.env.JWT_SECRET, {
-        expiresIn: process.env.JWT_REFRESH_EXPIRES_IN,
+        expiresIn: "1d",
       });
 
       res.status(httpStatus.OK).json({

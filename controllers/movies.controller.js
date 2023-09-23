@@ -6,9 +6,6 @@ export const moviesController = () => {
   const getMovies = async (req, res, next) => {
     const page = req.params.page || 1;
 
-    //get the Today's date in the format YYYY-MM-DD
-    const todayDate = new Date().toISOString().slice(0, 10);
-
     const url = `${process.env.TMDB_API_URL}/discover/movie/?api_key=${process.env.TMDB_API_KEY}&page=${page}`;
 
     try {
