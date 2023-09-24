@@ -31,13 +31,13 @@ app.use(
       "/api/genres",
       "/api/movies/genres",
       "/api/movies/search",
-      "/api/movie/:id",
-      "/api/image/:id",
+      "/api/movie/",
+      "/api/image/",
       "/api/movies/:page",
       "/api/reviews",
-      "/api/reviews/:id",
-      "/api/reviews/movie/:id",
-      "/api/reviews/user/:id",
+      "/api/reviews/",
+      "/api/reviews/movie/",
+      "/api/reviews/user/",
     ],
   })
 );
