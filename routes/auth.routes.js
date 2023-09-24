@@ -21,15 +21,10 @@ export const authRoutes = () => {
 
   authRouter
     .route("/auth/update/password/:id")
-    .post(
-      authUsers,
-      userUpdateValidation,
-      userParamsValidation,
-      changePassword
-    );
+    .put(authUsers, userUpdateValidation, userParamsValidation, changePassword);
   authRouter
     .route("/auth/update/profile/:id")
-    .post(authUsers, userUpdateValidation, userParamsValidation, updateProfile);
+    .put(authUsers, userUpdateValidation, userParamsValidation, updateProfile);
 
   authRouter.route("/auth/refresh").post(refreshToken);
 
