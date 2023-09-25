@@ -18,28 +18,38 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
+function isPathExcluded(req) {
+  const excludedPaths = [
+    "/api/auth/login",
+    "/api/auth/register",
+    "/api/auth/refresh",
+    "/api/movies",
+    "/api/genres",
+    "/api/movies/genres",
+    "/api/movies/search",
+    /^\/api\/image\/[^/]+$/,
+    /^\/api\/movies\/[^/]+$/,
+    /^\/api\/movie\/[^/]+$/,
+    "/api/reviews",
+    /^\/api\/reviews\/[^/]+$/,
+    /^\/api\/reviews\/movie\/[^/]+$/,
+    /^\/api\/reviews\/user\/[^/]+$/,
+  ];
+  const { path } = req;
+
+  return excludedPaths.some((excludedPath) => {
+    if (excludedPath instanceof RegExp) {
+      return excludedPath.test(path);
+    }
+    return path.startsWith(excludedPath);
+  });
+}
+
 app.use(
   jwt({
     secret: process.env.JWT_SECRET,
     algorithms: ["HS256"],
-  }).unless({
-    path: [
-      "/api/auth/login",
-      "/api/auth/register",
-      "/api/auth/refresh",
-      "/api/movies",
-      "/api/genres",
-      "/api/movies/genres",
-      "/api/movies/search",
-      "/api/movie/",
-      "/api/image/",
-      "/api/movies/:page",
-      "/api/reviews",
-      "/api/reviews/",
-      "/api/reviews/movie/",
-      "/api/reviews/user/",
-    ],
-  })
+  }).unless(isPathExcluded)
 );
 
 app.use((req, res, next) => {
