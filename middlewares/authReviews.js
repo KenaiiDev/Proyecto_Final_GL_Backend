@@ -34,7 +34,7 @@ export const authReviews = async (req, res, next) => {
 };
 
 export const authCreateReview = async (req, res, next) => {
-  constconst headers = req.headers;
+  const headers = req.headers;
   const authorization = headers && headers.authorization;
   const token = authorization && authorization.split(" ")[1];
 
